@@ -32,9 +32,15 @@ else { $SelectedDNSIP_use = "$SelectedDNSIP" }
 Write-Host ""
 Write-Host -ForegroundColor Cyan "Setting DNS Server IP of Adapter $SelectedInterfaceIndex to $SelectedDNSIP_use ..."
 
-if ($SelectedDNSIP_use -eq "Reset") { $SelectedDNSIP_use = "-ResetServerAddresses" }
-else { $SelectedDNSIP_use = "-ServerAddresses $SelectedDNSIP_use" }
+if ($SelectedDNSIP_use -eq "Reset") {
+    Set-DnsClientServerAddress -InterfaceIndex $SelectedInterfaceIndex -ResetServerAddresses
+} else {
+    Set-DnsClientServerAddress -InterfaceIndex $SelectedInterfaceIndex -ServerAddresses $SelectedDNSIP_use
+}
 
-Set-DnsClientServerAddress -InterfaceIndex $SelectedInterfaceIndex $SelectedDNSIP_use
-
+Write-Host ""
+Write-Host -ForegroundColor Cyan "Confirming..."
 Get-DnsClientServerAddress -AddressFamily IPv4 -InterfaceIndex $SelectedInterfaceIndex
+
+Write-Host ""
+Write-Host -ForegroundColor Cyan "Exiting..."
